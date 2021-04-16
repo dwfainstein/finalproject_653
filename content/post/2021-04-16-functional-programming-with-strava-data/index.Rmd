@@ -1,0 +1,21 @@
+---
+title: Functional Programming with Strava Data
+author: R package build
+date: '2021-04-16'
+slug: functional-programming-with-strava-data
+categories:
+  - R
+tags:
+  - R
+  - Strava
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(purrr)
+library(repurrrsive)
+```
+
