@@ -1,0 +1,96 @@
+---
+title: "messing about"
+author: "Joe Swinehart"
+date: "5/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(rStrava)
+library(plyr)
+
+app_name <- "prineswine"
+app_client_id <- "60669"
+app_secret <- "f8261413e4cc3281326752d43e6b5e0cf6668e04"
+#create the authentication token (only once)
+#stoken <- httr::config(token = strava_oauth(app_name, app_client_id, app_secret, 
+                       #app_scope="activity:read_all", cache=TRUE))
+#retrieve local token
+stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
+filename_raw <- "./data_raw.Rda"
+filename_df <- "./data_df.Rda"
+if (file.exists(filename_df)) {
+   cat("….. download last week")
+   load("./data_df.Rda")       
+# create empty data frame with same amount of columns as existing data, 
+# otherwise column mismatch may occur                          
+   df_empty <- df_activities[0,]
+                                        
+# define last date minus 1 week for corrections 
+   last_date <- as.Date(max(df_activities$start_date))-7             
+# get new activities and place in data frame   
+   new_activities <- get_activity_list(stoken, after = last_date)
+   df_new_activities <- compile_activities(new_activities, units="metric")
+   df_new_activities <- rbind.fill(df_empty,df_new_activities)
+# replace existing records with updated ones, ignore the warnings 
+suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
+# combine dataframes
+  df_activities <- rbind.fill(df_activities,df_new_activities)    
+  df_activities <- unique(df_activities)    
+} 
+ {
+   cat("….. Downloading from 2004, this takes some time")
+   last_date <- as.Date("2004-01-01")
+   activities <- get_activity_list(stoken, after = last_date)
+   df_activities <- compile_activities(activities, units="metric")
+ }
+# store dataframe
+save(df_activities, file="data_df.Rda")
+```
+
+```{r}
+#load df_activities
+load("data_df.Rda")
+
+#prepare data and create new data frame
+Sport<-data.frame("id" = df_activities$id,
+                  "when" = strptime(df_activities$start_date_local, format="%Y-%m-%dT%H:%M:%SZ"),
+                  "date" = as.Date(df_activities$start_date_local, format="%Y-%m-%d"),
+                  "week" = as.numeric(strftime(as.Date(df_activities$start_date_local), format = "%V")),
+                  "year" = as.numeric(strftime(df_activities$start_date_local, format="%Y")),
+                  "type" = df_activities$type,
+                  "dist" = df_activities$distance,              #distance in km
+                  "duration" = df_activities$moving_time/3600,  #Moving time in hours
+                  "duration_s" = df_activities$moving_time,     #Moving time in seconds
+                  "commute" = as.factor(df_activities$commute), #TRUE or FALSE
+                  "heart" = df_activities$average_heartrate,
+                  "cad" = df_activities$average_cadence,
+                  "cal" = df_activities$kilojoules * 239.005736, #1 kilojoule = 239.005736 calories
+                  "name" = df_activities$name,
+                  "kudos" = df_activities$kudos_count)
+
+#Add some columns
+Sport$time <- strftime(Sport$when, format="%H:%M:%S")
+Sport <- Sport[c(1:3,10,4:9)]                                    #change order of columns, not really needed 
+Sport$month <- as.integer(format(Sport$date, format = "%m"))
+Sport$pace <- (Sport$duration_s/60)/Sport$dist                   #pace in min/km
+Sport$swimpace <- (Sport$duration_s/60)/(Sport$dist*10)          #pace in min/100 m
+Sport$speed <- Sport$dist/Sport$duration
+
+# transform all inf to NA, this prevents errors and frustration in the future
+is.na(Sport) <- do.call(cbind,lapply(Sport, is.infinite))
+
+# Store final data fram
+save(Sport, file="Sport_df.Rda")
+```
+
