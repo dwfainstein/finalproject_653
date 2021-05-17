@@ -94,3 +94,14 @@ is.na(Sport) <- do.call(cbind,lapply(Sport, is.infinite))
 save(Sport, file="Sport_df.Rda")
 ```
 
+```{r}
+#load the rda file
+load(file = "data_df.Rda")
+```
+
+
+```{r}
+install.packages('devtools')
+devtools::install_github('fawda123/rStrava')
+```
+
