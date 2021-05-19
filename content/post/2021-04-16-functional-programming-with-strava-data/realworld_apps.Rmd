@@ -1,0 +1,68 @@
+---
+title: "Real-World Applications for Strava Data"
+author: "Makayla Whitney, Joe Swinehart, Janette Avelar, David Fainstein"
+date: "5/19/2021"
+slug: functional-programming-with-strava-data
+categories: R
+tags:
+- R
+- Strava
+---
+
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+#note: include = FALSE and echo = FALSE for now, but it will still print messages and can be coerced to show full chunks of code if we desire
+
+library(tidyverse)
+library(purrr)
+library(repurrrsive)
+library(here)
+library(janitor)
+library(lubridate)
+
+```
+
+This will produce an overlay of the Strava data (specifically bike rides) on top of Eugene, Oregon bike paths. City planners use Strava data to understand high-use areas within the city to help avoid accidents involving bikers and runners. 
+
+
+```{r firststep}
+#reading in data
+strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
+
+#starting with some initial tidying
+dataready <- strav_data %>% 
+  select(where(~length(unique(.)) > 1)) %>%
+  clean_names() %>% 
+  mutate_if(is.numeric, ~round(., 2))
+
+
+#load in googlemaps polylines
+polylate <- function(activity_id){
+  this_activity <- get_activity(id = activity_id, stoken = stoken)
+  this_polyline <- this_activity$map$summary_polyline
+  decoded_polyline <- gepaf::decodePolyline(this_polyline)
+  return(decoded_polyline)
+}
+
+```
+
+
+```{r secondstep}
+
+
+```
+
+
+```{r thirdstep}
+
+````
+
+
+```{r fourthstep}
+
+````
+
+
+
+
