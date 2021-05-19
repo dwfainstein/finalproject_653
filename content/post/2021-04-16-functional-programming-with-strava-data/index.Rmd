@@ -59,23 +59,14 @@ strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with
 
 #starting with some initial tidying
 dataready <- strav_data %>% 
-  select(-trainer,
-         -average_temp,
-         -total_photo_count,
-         -private,
-         -photo_count,
-         -has_heartrate,
-         -has_kudoed,
-         -display_hide_heartrate_option,
-         -commute) %>% 
-  clean_names()
-  # timeaftertime(dataready$start_date)
+  select(where(~length(unique(.)) > 1)) %>%
+  clean_names() %>% 
+  mutate_if(is.numeric, ~round(., 2))
+  
+  
 
 
-# timeaftertime <- function(x) {
-#   map_df()
-#     
-# }
+# uniquecols <- function(x) length(unique([,y]) > 1)
 
 ```
 
