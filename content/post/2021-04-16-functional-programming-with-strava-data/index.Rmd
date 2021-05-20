@@ -57,16 +57,29 @@ There are many variations of passages of Lorem Ipsum available, but the majority
 #reading in data for sandbox
 strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
-#starting with some initial tidying
-dataready <- strav_data %>% 
+#initial function for tidying Stravadata
+tidyfunc <- function(strav_data) {
+strav_data %>% 
   select(where(~length(unique(.)) > 1)) %>%
   clean_names() %>% 
-  mutate_if(is.numeric, ~round(., 2))
-  
-  
+  mutate_if(is.numeric, ~round(., 2)) %>% 
+  filter(type != "Swim") %>% 
+  mutate(type = as.factor(type)) %>% 
+  separate(start_date_local, c("date","time"), sep = " ") %>% 
+  select(-start_date)
+}
+
+#Function taken directly from Lab3 to determine percentage of each activity in dataset
+# Using proportions could be useful to select only the most common activities (e.g., >5%)
+proportions_activity <- function(activities) {
+  map_dbl(split(activities, activities), length) / length(activities)
+}
+
+tidy1 <- tidyfunc(strav_data)
+a <- proportions_activity(tidy1$type)
 
 
-# uniquecols <- function(x) length(unique([,y]) > 1)
+
 
 ```
 
