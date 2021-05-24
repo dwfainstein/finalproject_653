@@ -25,47 +25,49 @@ library(lubridate)
 
 ```{r firststep}
 
-print("See things here")
-
-a <- 8
-b <- 9
-
-print(a+b)
-
 
 
 ```
 
-Strava url(http://labs.strava.com) is a data rich platform to collect, store, and use physical activity data. One key challenge faced by many sporting enthusiasts is how to effectively take control of their own data to make novel and interesting visualizations or depictions of one's hard work. In some senses, Strava makes this easy by packing your data for you with options on how you wish to view your achievements. For the DIY'er, the story is a little more complicated. As we've outlined above with the reading in of your personal Strava data, there is a consistent theme of following key steps to have our data ready for your most creative projects.
+Strava (http://labs.strava.com) is a data rich platform to collect, store, and use physical activity data. One key challenge faced by many sporting enthusiasts is how to effectively take control of their own data to make novel and interesting visualizations or depictions of one's hard work. In some senses, Strava makes this easy by packing your data for you with options on how you wish to view your achievements. For the DIY'er, the story is a little more complicated. As we've outlined above with the reading in of your personal Strava data, there is a consistent theme of following key steps to have our data ready for your most creative projects.
 
 The following code chunk takes data from the prior API calls and tidy's a dataframe for use. There are a few functions embedded that whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
-```{r secondstep}
+```{r secondstep, echo=TRUE}
 #reading in data for sandbox
+# Will be deleted for final project
 strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
 #initial function for tidying Stravadata
-tidyfunc <- function(strav_data) {
-strav_data %>% 
+tidyfunc <- strav_data %>% 
   select(where(~length(unique(.)) > 1)) %>%
+    # selecting unique values
   clean_names() %>% 
   mutate_if(is.numeric, ~round(., 2)) %>% 
-  filter(type != "Swim") %>% 
+    # rounding values to remove clutter for visualization
   mutate(type = as.factor(type)) %>% 
   separate(start_date_local, c("date","time"), sep = " ") %>% 
-  select(-start_date)
-}
+  select(-start_date) %>% 
+    #separating out date & time; excluding multiple dates and times
+  filter(elapsed_time > 0,
+         max_speed > average_speed)
+    # removes activities with no duration (which rules out manually entered activities where no time is supplied) and also incorrect calculations where Strava defines the an average speed that is higher than the max speed (this most often occurs in swimming)
 
-#Function taken directly from Lab3 to determine percentage of each activity in dataset
-# Using proportions could be useful to select only the most common activities (e.g., >5%)
+```
+
+After our data has a first-pass-tidy, we want to sort out which activities occurred frequently enough that they would be useful to display visually. In our view, having 98% of your activities comprise three different types (e.g., hiking, running, and biking), and 2% of your activities comprise 4 types (e.g., stand-up paddle boarding, walking, rock climbing, and jump rope), then your visualization will be skewed. It is certainly possible to select specific activities to visualize, and this will be something you can read more about later. For now, we're going to pair down our data to activity types that occur most commonly.
+
+```{r SufficientActivities}
+#Function borrowed directly from Lab3 to determine percentage of each activity in dataset
+# Using proportions could be useful to select only the most common activities (e.g., >1%)
 proportions_activity <- function(activities) {
-  map_dbl(split(activities, activities), length) / length(activities)
+  temp <- map_dbl(split(activities, activities), length) / length(activities)
+  return(as.list(temp > 0.01))
 }
-
-tidy1 <- tidyfunc(strav_data)
-a <- proportions_activity(tidy1$type)
+activity_prop <- proportions_activity(tidyfunc$type)
 
 
-
+# tidyfunc %>% 
+#   sapply(activity_prop, function(x) filter(tidyfunc$type %in% x))
 
 ```
 
