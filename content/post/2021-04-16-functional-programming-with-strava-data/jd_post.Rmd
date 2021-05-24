@@ -1,0 +1,39 @@
+---
+title: "Fun with Strava Data"
+author: "R Package Build"
+date: "5/24/2021"
+slug: functional-programming-with-strava-data
+categories: R
+tags:
+- R
+- Strava
+---
+
+## Let's have fun with your Strava data!
+
+This blog post is intended to provide an additional example of the ways personal data can be used. Our final product will be a ridgeline plot a la Joy Division's *Unknown Pleasures*. Slap it on a t-shirt, throw it on a mug, and fool your friends! Or most likely strangers! Because your friends probably already know your musical preferences!
+
+Them: Oh, you're a Joy Division fan? 
+
+You: **No!** I just love cycling and data!
+
+```{r Final product}
+
+```
+
+## Alright friends
+
+First things first, open up RStudio and start a brand new R Markdown file. We're going to use quite a few packages, most of which have been introduced in our other blog posts (link here). Here's what we'll need:
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(purrr)
+library(repurrrsive)
+library(here)
+library(janitor)
+library(lubridate)
+library(rStrava)
+library(plyr)
+```
