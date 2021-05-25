@@ -20,12 +20,7 @@ library(repurrrsive)
 library(here)
 library(janitor)
 library(lubridate)
-
-```
-
-```{r firststep}
-
-
+library(dplyr)
 
 ```
 
@@ -37,20 +32,31 @@ The following code chunk takes data from the prior API calls and tidy's a datafr
 # Will be deleted for final project
 strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
+yardstometers <- function(yards, swimming) {
+  ifelse(swimming, yards * 1.09361, yards)
+}
+
+semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
+
 #initial function for tidying Stravadata
 tidyfunc <- strav_data %>% 
   select(where(~length(unique(.)) > 1)) %>%
     # selecting unique values
-  clean_names() %>% 
-  mutate_if(is.numeric, ~round(., 2)) %>%  
-    # rounding values to remove clutter for visualization
   mutate(type = as.factor(type)) %>% 
+  dplyr::rename(act_type = type) %>% 
+  clean_names() %>% 
+  mutate(is_swimming = act_type == "swimming",
+         distance = yardstometers(distance, is_swimming))
+    # rounding values to remove clutter for visualization
+ 
   separate(start_date_local, c("date","time"), sep = " ") %>% 
   select(-start_date) %>% 
     #separating out date & time; excluding multiple dates and times
   filter(elapsed_time > 0,
          max_speed > average_speed)
     # removes activities with no duration (which rules out manually entered activities where no time is supplied) and also incorrect calculations where Strava defines the an average speed that is higher than the max speed (this most often occurs in swimming)
+
+
 
 ```
 
@@ -59,11 +65,13 @@ After our data has a first-pass-tidy, we want to sort out which activities occur
 ```{r SufficientActivities}
 #Function borrowed directly from Lab3 to determine percentage of each activity in dataset
 # Using proportions could be useful to select only the most common activities (e.g., >1%)
-proportions_activity <- function(activities) {
+proportions_activity <- function(activities, threshold = 0.01) {
   temp <- map_dbl(split(activities, activities), length) / length(activities)
-  return(as.list(temp > 0.01))
+  d <- data.frame(act_type = names(temp),
+             gt_threshold = temp > threshold)
+  d[d$gt_threshold, "act_type", drop = FALSE]
 }
-activity_prop <- proportions_activity(tidyfunc$type)
+activity_prop <- proportions_activity(tidyfunc$act_type)
 
 
 # tidyfunc %>% 
