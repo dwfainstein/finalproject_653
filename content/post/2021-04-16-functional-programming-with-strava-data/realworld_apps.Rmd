@@ -27,28 +27,42 @@ This will produce an overlay of the Strava data (specifically bike rides) on top
 
 
 ```{r firststep}
-#reading in data
+#reading in data for sandbox
 strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
-#starting with some initial tidying
-dataready <- strav_data %>% 
+#initial function for tidying Stravadata
+tidymap <- strav_data %>% 
   select(where(~length(unique(.)) > 1)) %>%
+    # selecting unique values
   clean_names() %>% 
-  mutate_if(is.numeric, ~round(., 2))
+  mutate_if(is.numeric, ~round(., 2)) %>% 
+    # rounding values to remove clutter for visualization
+  mutate(type = as.factor(type)) %>% 
+  separate(start_date_local, c("date","time"), sep = " ") %>% 
+  select(-start_date) %>% 
+    #separating out date & time; excluding multiple dates and times
+  filter(elapsed_time > 0,
+         max_speed > average_speed)
 
-
-#load in googlemaps polylines
-polylate <- function(activity_id){
-  this_activity <- get_activity(id = activity_id, stoken = stoken)
-  this_polyline <- this_activity$map$summary_polyline
-  decoded_polyline <- gepaf::decodePolyline(this_polyline)
-  return(decoded_polyline)
-}
+#further filter
+filteredmap <- tidymap %>%
+  select(distance,
+         timezone,
+         type)
 
 ```
 
 
 ```{r secondstep}
+#load in Eugene, OR road map (borrowed from W21 lecture on 4/28)
+library(tigris)
+library(sf)
+library(glue)
+options(tigris_class = "sf")
+roads_laneco <- roads("OR", "Lane")
+
+eugeneroads <- ggplot(roads_laneco) +
+  geom_sf(color = "gray60")
 
 
 ```
@@ -61,8 +75,16 @@ polylate <- function(activity_id){
 
 ```{r fourthstep}
 
+#saving plots
+#create a directory
+fs::dir_create(here::here("final_plots", "eugeneroads"))
+paths <- here::here("final_plots", "eugeneroads", glue("{eugeneroads}.png"))
+
+#trying to find a way to fit this in
+walk2(paths, final_plots$eugeneroads, ggsave,
+      width = 9.5, 
+      height = 6.5,
+      dpi = 500)
+
 ````
-
-
-
 
