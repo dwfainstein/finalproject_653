@@ -1,5 +1,5 @@
 ---
-title: "Real-World Applications for Strava Data"
+title: "Parallel Iterations of Strava Data"
 author: "Makayla Whitney, Joe Swinehart, Janette Avelar, David Fainstein"
 date: "5/19/2021"
 slug: functional-programming-with-strava-data
@@ -23,7 +23,7 @@ library(lubridate)
 
 ```
 
-Strava is an excellent way to keep track of physical activity on an individual basis. Due to its open-source nature, Strava data has also been mined by researchers for exercise patterns and high-density spots per activity type. For example, a research group from Canada used individual users' bike activity data to create a map displaying high-density areas (Ferster et al., 2021). This map was overlaid with Ottawa, Canada's roads and bike paths, which included places of incident reports. By overlaying these maps, researchers were able to determine areas of high use for bikers that city planners should be aware of. This technique can be used within any city in the world to better understand how outdoor activities coincide with car accident reports to better predict and control for them. 
+Strava is an excellent way to keep track of physical activity on an individual basis. 
 
 We will begin by reading in a batch of data from one individual and filtering for the specific activity of biking. 
 
@@ -45,26 +45,12 @@ tidymap <- strav_data %>%
   filter(elapsed_time > 0,
          max_speed > average_speed)
 
-#further filter
-filteredmap <- tidymap %>%
-  select(distance,
-         timezone,
-         type)
 
 ```
 
 After we have filtered the data, we will load in our 
 
 ```{r secondstep}
-#load in Eugene, OR road map (borrowed from W21 lecture on 4/28)
-library(tigris)
-library(sf)
-library(glue)
-options(tigris_class = "sf")
-roads_laneco <- roads("OR", "Lane")
-
-eugeneroads <- ggplot(roads_laneco) +
-  geom_sf(color = "gray60")
 
 
 ```
