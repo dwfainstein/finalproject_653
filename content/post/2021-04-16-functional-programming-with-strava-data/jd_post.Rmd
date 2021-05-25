@@ -7,6 +7,8 @@ categories: R
 tags:
 - R
 - Strava
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## Let's have fun with your Strava data!
@@ -37,3 +39,42 @@ library(lubridate)
 library(rStrava)
 library(plyr)
 ```
+
+We're going to do a bit of jumping ahead, by assuming you have already loaded in your Strava data and created a tidy dataframe with it. We'll further modify and tidy, but if you aren't quite to this point see this previous post which will walk you through loading and cleaning: (link here).
+
+This is how your data frame should look assuming you followed the directions in the previous post:
+
+```{r}
+rmardown::paged_table(tidyfunc)
+```
+
+## Step 1
+
+We'll start by beginning to pare down the data frame. We want to select the activities we do the most, so we don't end up with strange incomplete lines. We can use the function created in [earlier post] to do this:
+
+```{r}
+
+```
+
+## Step 2A
+
+In order to create lines that mimic the "ridge" effect, we'll also need to split our data frames, by activity type and dates. The peaks and valleys of our ridgeline plot will reflect the high and low elevation points reached during an individual activity, while the length of the line will be created by collapsing activity across date spans. Keep in mind this will require a moderate to large dataset with a lot of points to manipulate. If that's not the case, we can simulate the data, which kind of makes you a liar. But I'll show you how to do it anyway. *[decide if this step is something you want to include and if this method works for creating the plot - ask DA]*
+
+*If you have a large enough data set [how many points should I be aiming for? Idk!] skip ahead to step 2B.*
+
+```{r expand data set}
+# here I'll need a small data set
+# Maybe one option is to way pare down current data set to use as an example
+# If you do that, don't include data chunk
+
+# Then will walk through creation of a function to simulate additional data 
+```
+
+## Step 2B
+
+In our example data frame, we'll split into the following activity types: 
+
+```{r}
+tidyfunc
+```
+
