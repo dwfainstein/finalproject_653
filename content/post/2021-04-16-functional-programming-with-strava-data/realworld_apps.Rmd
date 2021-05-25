@@ -23,8 +23,9 @@ library(lubridate)
 
 ```
 
-This will produce an overlay of the Strava data (specifically bike rides) on top of Eugene, Oregon bike paths. City planners use Strava data to understand high-use areas within the city to help avoid accidents involving bikers and runners. 
+Strava is an excellent way to keep track of physical activity on an individual basis. Due to its open-source nature, Strava data has also been mined by researchers for exercise patterns and high-density spots per activity type. For example, a research group from Canada used individual users' bike activity data to create a map displaying high-density areas (Ferster et al., 2021). This map was overlaid with Ottawa, Canada's roads and bike paths, which included places of incident reports. By overlaying these maps, researchers were able to determine areas of high use for bikers that city planners should be aware of. This technique can be used within any city in the world to better understand how outdoor activities coincide with car accident reports to better predict and control for them. 
 
+We will begin by reading in a batch of data from one individual and filtering for the specific activity of biking. 
 
 ```{r firststep}
 #reading in data for sandbox
@@ -52,6 +53,7 @@ filteredmap <- tidymap %>%
 
 ```
 
+After we have filtered the data, we will load in our 
 
 ```{r secondstep}
 #load in Eugene, OR road map (borrowed from W21 lecture on 4/28)
