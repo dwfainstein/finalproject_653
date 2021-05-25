@@ -32,6 +32,7 @@ library(lubridate)
 Strava (http://labs.strava.com) is a data rich platform to collect, store, and use physical activity data. One key challenge faced by many sporting enthusiasts is how to effectively take control of their own data to make novel and interesting visualizations or depictions of one's hard work. In some senses, Strava makes this easy by packing your data for you with options on how you wish to view your achievements. For the DIY'er, the story is a little more complicated. As we've outlined above with the reading in of your personal Strava data, there is a consistent theme of following key steps to have our data ready for your most creative projects.
 
 The following code chunk takes data from the prior API calls and tidy's a dataframe for use. There are a few functions embedded that whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
+
 ```{r secondstep, echo=TRUE}
 #reading in data for sandbox
 # Will be deleted for final project
