@@ -42,7 +42,7 @@ tidyfunc <- strav_data %>%
   select(where(~length(unique(.)) > 1)) %>%
     # selecting unique values
   clean_names() %>% 
-  mutate_if(is.numeric, ~round(., 2)) %>% 
+  mutate_if(is.numeric, ~round(., 2)) %>%  
     # rounding values to remove clutter for visualization
   mutate(type = as.factor(type)) %>% 
   separate(start_date_local, c("date","time"), sep = " ") %>% 
