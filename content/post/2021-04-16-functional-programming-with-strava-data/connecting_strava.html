@@ -1,0 +1,132 @@
+---
+title: "connecting_strava"
+author: "Joe Swinehart"
+date: "5/24/2021"
+slug: functional-programming-with-strava-data
+categories: R
+tags:
+- R
+- Strava
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="lets-bring-in-your-strava-data" class="section level2">
+<h2>Let’s bring in your Strava data!</h2>
+<p>This blog post will guide you the somewhat complicated process of bringing in your own personal Strava data for use within the RStudio environment. To begin, you will need to have two things: an active Strava account and an RStudio .Rmd ready to use.</p>
+<p>First, visit <a href="https://www.strava.com/settings/api" class="uri">https://www.strava.com/settings/api</a>. If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.</p>
+<center>
+<div class="figure">
+<img src="img/shot1.png" style="width:40.0%" alt="" />
+<p class="caption">initial API screen</p>
+</div>
+</center>
+<p>You will need to enter some basic information to complete this process.</p>
+<p>First, come up with an <strong>application name</strong>. This can be anything you like, but keep it simple.</p>
+<p>Next, choose an <strong>application type</strong>. For our example, we selected “data importer” because that is our primary purpose here.</p>
+<p>The <strong>club</strong> field can be left empty.</p>
+<p>Enter whatever <strong>website</strong> you like in the relevant field. Your github repo or Strava profile page would work fine, as no one besides you will likely be looking at this information.</p>
+<p>The <strong>application description</strong> can be whatever you like.</p>
+<p>For the <strong>authorization callback domain</strong>, enter <em>developers.strava.com.</em></p>
+<p>When you are done, you should have it filled out something like this:</p>
+<center>
+<div class="figure">
+<img src="img/shot2.png" style="width:40.0%" alt="" />
+<p class="caption">completed API creation form</p>
+</div>
+</center>
+<p>When you click on Create, it will ask you to update your app icon. You can add any image file you like, and then it will take you to a screen listing your information.</p>
+<center>
+<div class="figure">
+<img src="img/shot4.png" style="width:40.0%" alt="" />
+<p class="caption">completed API creation form</p>
+</div>
+</center>
+<p>For the next step, you will need to show your <strong>Client Secret</strong>, which will display a long alphanumeric string that is unique to you. This allows RStudio to talk to Strava for the initial handshake, verifying your identity and allowing RStudio to pull your data.</p>
+<p>In your .Rmd, add the following lines of code:</p>
+<pre><code># ```{r}
+# 
+# library(rStrava)
+# 
+# library(plyr)
+# 
+# app_name &lt;- &quot;ENTER_YOUR_APP_NAME_HERE &quot;
+# 
+# app_client_id &lt;- &quot;ENTER_YOUR_CLIENT_ID_HERE&quot;
+# 
+# app_secret &lt;- &quot;ENTER_YOUR_CLIENT_SECRET_HERE&quot;
+# 
+# #create the authentication token (only once)
+# 
+# stoken &lt;- httr::config(token = strava_oauth(app_name, app_client_id, app_secret,
+# 
+# app_scope=&quot;activity:read_all&quot;, cache=TRUE))
+# 
+# #retrieve local token
+# 
+# stoken &lt;- httr::config(token = readRDS(&#39;.httr-oauth&#39;)[[1]])
+# 
+# filename_raw &lt;- &quot;./data_raw.Rda&quot;
+# 
+# filename_df &lt;- &quot;./data_df.Rda&quot;
+# 
+# if (file.exists(filename_df)) {
+# 
+# cat(&quot;….. download last week&quot;)
+# 
+# load(&quot;./data_df.Rda&quot;)
+# 
+# # create empty data frame with same amount of columns as existing data,
+# 
+# # otherwise column mismatch may occur
+# 
+# df_empty &lt;- df_activities[0,]
+# 
+# # define last date minus 1 week for corrections
+# 
+# last_date &lt;- as.Date(max(df_activities$start_date))-7
+# 
+# # get new activities and place in data frame
+# 
+# new_activities &lt;- get_activity_list(stoken, after = last_date)
+# 
+# df_new_activities &lt;- compile_activities(new_activities, units=&quot;metric&quot;)
+# 
+# df_new_activities &lt;- rbind.fill(df_empty,df_new_activities)
+# 
+# # replace existing records with updated ones, ignore the warnings
+# 
+# suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] &lt;- df_new_activities)
+# 
+# # combine dataframes
+# 
+# df_activities &lt;- rbind.fill(df_activities,df_new_activities)
+# 
+# df_activities &lt;- unique(df_activities)
+# 
+# }
+# 
+# {
+# 
+# cat(&quot;….. Downloading from 2004, this takes some time&quot;)
+# 
+# last_date &lt;- as.Date(&quot;2004-01-01&quot;)
+# 
+# activities &lt;- get_activity_list(stoken, after = last_date)
+# 
+# df_activities &lt;- compile_activities(activities, units=&quot;metric&quot;)
+# 
+# }
+# 
+# # store dataframe
+# 
+# save(df_activities, file=&quot;data_df.Rda&quot;)
+
+```</code></pre>
+<p>Some things to note: be sure to enter your own <strong>Application Name</strong>, <strong>Client ID</strong>, and <strong>Client Secret</strong> in the correct spots. After running that code chunk, you should connect to the Strava website for authorization.</p>
+<p>Check both boxes, and then click Authorize to link Strava with your data.</p>
+<p>After the Authorization is complete, you will have a file called <em>stoken</em> appear in your working environment. Once that file is in place, you can comment out the two lines of code directly under the spot where you entered your Client Secret. You will see a little note there that it only needs to happen once:</p>
+<p>#create the authentication token (only once)</p>
+<p>delete this line it’s just me checking gitkraken</p>
+</div>

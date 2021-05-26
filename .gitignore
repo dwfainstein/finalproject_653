@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+
+.httr-oauth
+
+content/post/.DS_Store
+
+content/post/2021-04-16-functional-programming-with-strava-data/.DS_Store

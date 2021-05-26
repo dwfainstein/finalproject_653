@@ -59,83 +59,83 @@ For the next step, you will need to show your **Client Secret**, which will disp
 
 In your .Rmd, add the following lines of code:
 
-    ```{r}
-
-    library(rStrava)
-
-    library(plyr)
-
-    app_name <- "ENTER_YOUR_APP_NAME_HERE "
-
-    app_client_id <- "ENTER_YOUR_CLIENT_ID_HERE"
-
-    app_secret <- "ENTER_YOUR_CLIENT_SECRET_HERE"
-
-    #create the authentication token (only once)
-
-    stoken <- httr::config(token = strava_oauth(app_name, app_client_id, app_secret,
-
-    app_scope="activity:read_all", cache=TRUE))
-
-    #retrieve local token
-
-    stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
-
-    filename_raw <- "./data_raw.Rda"
-
-    filename_df <- "./data_df.Rda"
-
-    if (file.exists(filename_df)) {
-
-    cat("….. download last week")
-
-    load("./data_df.Rda")
-
-    # create empty data frame with same amount of columns as existing data,
-
-    # otherwise column mismatch may occur
-
-    df_empty <- df_activities[0,]
-
-    # define last date minus 1 week for corrections
-
-    last_date <- as.Date(max(df_activities$start_date))-7
-
-    # get new activities and place in data frame
-
-    new_activities <- get_activity_list(stoken, after = last_date)
-
-    df_new_activities <- compile_activities(new_activities, units="metric")
-
-    df_new_activities <- rbind.fill(df_empty,df_new_activities)
-
-    # replace existing records with updated ones, ignore the warnings
-
-    suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
-
-    # combine dataframes
-
-    df_activities <- rbind.fill(df_activities,df_new_activities)
-
-    df_activities <- unique(df_activities)
-
-    }
-
-    {
-
-    cat("….. Downloading from 2004, this takes some time")
-
-    last_date <- as.Date("2004-01-01")
-
-    activities <- get_activity_list(stoken, after = last_date)
-
-    df_activities <- compile_activities(activities, units="metric")
-
-    }
-
-    # store dataframe
-
-    save(df_activities, file="data_df.Rda")
+    # ```{r}
+    # 
+    # library(rStrava)
+    # 
+    # library(plyr)
+    # 
+    # app_name <- "ENTER_YOUR_APP_NAME_HERE "
+    # 
+    # app_client_id <- "ENTER_YOUR_CLIENT_ID_HERE"
+    # 
+    # app_secret <- "ENTER_YOUR_CLIENT_SECRET_HERE"
+    # 
+    # #create the authentication token (only once)
+    # 
+    # stoken <- httr::config(token = strava_oauth(app_name, app_client_id, app_secret,
+    # 
+    # app_scope="activity:read_all", cache=TRUE))
+    # 
+    # #retrieve local token
+    # 
+    # stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
+    # 
+    # filename_raw <- "./data_raw.Rda"
+    # 
+    # filename_df <- "./data_df.Rda"
+    # 
+    # if (file.exists(filename_df)) {
+    # 
+    # cat("….. download last week")
+    # 
+    # load("./data_df.Rda")
+    # 
+    # # create empty data frame with same amount of columns as existing data,
+    # 
+    # # otherwise column mismatch may occur
+    # 
+    # df_empty <- df_activities[0,]
+    # 
+    # # define last date minus 1 week for corrections
+    # 
+    # last_date <- as.Date(max(df_activities$start_date))-7
+    # 
+    # # get new activities and place in data frame
+    # 
+    # new_activities <- get_activity_list(stoken, after = last_date)
+    # 
+    # df_new_activities <- compile_activities(new_activities, units="metric")
+    # 
+    # df_new_activities <- rbind.fill(df_empty,df_new_activities)
+    # 
+    # # replace existing records with updated ones, ignore the warnings
+    # 
+    # suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
+    # 
+    # # combine dataframes
+    # 
+    # df_activities <- rbind.fill(df_activities,df_new_activities)
+    # 
+    # df_activities <- unique(df_activities)
+    # 
+    # }
+    # 
+    # {
+    # 
+    # cat("….. Downloading from 2004, this takes some time")
+    # 
+    # last_date <- as.Date("2004-01-01")
+    # 
+    # activities <- get_activity_list(stoken, after = last_date)
+    # 
+    # df_activities <- compile_activities(activities, units="metric")
+    # 
+    # }
+    # 
+    # # store dataframe
+    # 
+    # save(df_activities, file="data_df.Rda")
 
     ```
 
@@ -145,6 +145,6 @@ Check both boxes, and then click Authorize to link Strava with your data.
 
 After the Authorization is complete, you will have a file called *stoken* appear in your working environment. Once that file is in place, you can comment out the two lines of code directly under the spot where you entered your Client Secret. You will see a little note there that it only needs to happen once:
 
-\#create the authentication token (only once) 
+\#create the authentication token (only once)
 
 delete this line it's just me checking gitkraken
