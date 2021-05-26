@@ -25,7 +25,7 @@ library(lubridate)
 
 This will produce an overlay of the Strava data (specifically bike rides) on top of Eugene, Oregon bike paths. City planners use Strava data to understand high-use areas within the city to help avoid accidents involving bikers and runners. 
 
-
+# Wow! Very interesting and creative project! I really like the usefulness of this project that to assist the policy maker creating safer enviroment for bikers and runners in Eugene! A new thing to learn for me!
 ```{r firststep}
 #reading in data
 strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
@@ -35,7 +35,7 @@ dataready <- strav_data %>%
   select(where(~length(unique(.)) > 1)) %>%
   clean_names() %>% 
   mutate_if(is.numeric, ~round(., 2))
-
+ # Perhaps can turn this dataready into a function for easier use and readability
 
 #load in googlemaps polylines
 polylate <- function(activity_id){
@@ -45,6 +45,9 @@ polylate <- function(activity_id){
   return(decoded_polyline)
 }
 
+
+#Perhaps add a warning / stop message in the case of failure to run? 
+#get_activity function has not been defined
 ```
 
 
