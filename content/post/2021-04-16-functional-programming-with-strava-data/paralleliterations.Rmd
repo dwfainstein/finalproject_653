@@ -94,3 +94,6 @@ walk2(paths, final_plots$eugeneroads, ggsave,
 
 ````
 
+### Overall comment by Shijing: 
+
+I think how you incorporate comment as explanation for your code is really friendly for viewers, especially for those who are less confident with coding. The language use for the blog (in `jd_post.Rmd`) is intriguing to read. The steps are broken down nicely, and linking blog posts together for your blog is a good idea for viewers to navigate. One potential improvement in the future could be displaying and explaining outputs briefly (or at least a part of a output by using `head()`) to complement your explanation of code so that people know what to expect if they want to adapt your code. I never use `walk2()` before, which is something new I learned! 

@@ -57,7 +57,7 @@ tidyfunc <- strav_data %>%
     # removes activities with no duration (which rules out manually entered activities where no time is supplied) and also incorrect calculations where Strava defines the an average speed that is higher than the max speed (this most often occurs in swimming)
 
 
-
+## Comment by Shijing: I like how you added comment to explain what your code is doing. This is really helpful for people to learn. 
 ```
 
 After our data has a first-pass-tidy, we want to sort out which activities occurred frequently enough that they would be useful to display visually. In our view, having 98% of your activities comprise three different types (e.g., hiking, running, and biking), and 2% of your activities comprise 4 types (e.g., stand-up paddle boarding, walking, rock climbing, and jump rope), then your visualization will be skewed. It is certainly possible to select specific activities to visualize, and this will be something you can read more about later. For now, we're going to pair down our data to activity types that occur most commonly.
