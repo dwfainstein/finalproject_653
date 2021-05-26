@@ -9,6 +9,7 @@ tags:
 - Strava
 ---
 
+## This is a neat data source to be using.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

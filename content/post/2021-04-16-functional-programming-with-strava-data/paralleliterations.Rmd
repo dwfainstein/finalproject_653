@@ -20,21 +20,25 @@ library(repurrrsive)
 library(here)
 library(janitor)
 library(lubridate)
+## Glue is not loaded for later in the script
+library(glue)
 
 ```
 
 Strava is an excellent way to keep track of physical activity on an individual basis. 
 
+## I could use a little explanation here about what the outcomes of this post are. Is this to show how to plot out activities by week and time? 
+
 We will begin by reading in a batch of data from one individual.
 
 ```{r firststep}
 #reading in data for sandbox
-strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
+strav_data <- read_csv(here::here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
 #initial function for tidying Stravadata
 tidydata <- strav_data %>% 
   select(where(~length(unique(.)) > 1)) %>%
-    # selecting unique values
+    # removing columns with non-varying values
   clean_names() %>% 
   mutate_if(is.numeric, ~round(., 2)) %>% 
     # rounding values to remove clutter for visualization
@@ -56,15 +60,24 @@ Then we will create a function that allows us to turn dates into days of the wee
 d <- tidydata %>%
   select(date, time, act_type)
 
-
+# Having trouble getting this to run
 daysoftheweek <- function(d, date) {
   date <- d(date = as.Date(c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))
   weekday <- strftime(date$date, "%A")
   print(weekday)
 }
 
+## Is this doing what you want?
+daysoftheweek <- function(d, date) {
+  d <- d %>% 
+    mutate(date = as.Date(date),
+           weekdays = weekdays(date))
+}
 
-byact <- weeklydata %>%
+sample <- daysoftheweek(d, date)
+
+# I think you are trying to pull in the `d` dataset from above?
+byact <- d %>%
   group_by(act_type) %>%
   nest()
 
@@ -72,6 +85,7 @@ byact <- weeklydata %>%
 ```
 
 This is an iteration of weekly activity Monday - Sunday categorized by time of day. 
+
 
 ```{r thirdstep}
 
@@ -84,7 +98,7 @@ This is another iteration of weekly activity Monday - Sunday categorized by time
 #saving plots
 #create a directory
 fs::dir_create(here::here("final_plots", "eugeneroads"))
-paths <- here::here("final_plots", "eugeneroads", glue("{eugeneroads}.png"))
+paths <- here::here("final_plots", "eugeneroads"), glue("{eugeneroads}.png"))
 
 #trying to find a way to fit this in
 walk2(paths, final_plots$eugeneroads, ggsave,
