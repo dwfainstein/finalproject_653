@@ -57,7 +57,7 @@ We'll start by beginning to pare down the data frame. We want to select the acti
 ```
 
 ## Step 2A
-
+### Comment:: Interesting use of the plot for this type of data.
 In order to create lines that mimic the "ridge" effect, we'll also need to split our data frames, by activity type and dates. The peaks and valleys of our ridgeline plot will reflect the high and low elevation points reached during an individual activity, while the length of the line will be created by collapsing activity across date spans. Keep in mind this will require a moderate to large dataset with a lot of points to manipulate. If that's not the case, we can simulate the data, which kind of makes you a liar. But I'll show you how to do it anyway. *[decide if this step is something you want to include and if this method works for creating the plot - ask DA]*
 
 *If you have a large enough data set [how many points should I be aiming for? Idk!] skip ahead to step 2B.*
