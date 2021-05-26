@@ -22,6 +22,7 @@ library(janitor)
 library(lubridate)
 library(dplyr)
 
+# It might actually help to include these libraries for the reader to see since this is a tutorial 
 ```
 
 Strava (http://labs.strava.com) is a data rich platform to collect, store, and use physical activity data. One key challenge faced by many sporting enthusiasts is how to effectively take control of their own data to make novel and interesting visualizations or depictions of one's hard work. In some senses, Strava makes this easy by packing your data for you with options on how you wish to view your achievements. For the DIY'er, the story is a little more complicated. As we've outlined above with the reading in of your personal Strava data, there is a consistent theme of following key steps to have our data ready for your most creative projects.
@@ -30,13 +31,15 @@ The following code chunk takes data from the prior API calls and tidy's a datafr
 ```{r secondstep, echo=TRUE}
 #reading in data for sandbox
 # Will be deleted for final project
-strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
+strav_data <- read_csv(here::here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
 yardstometers <- function(yards, swimming) {
   ifelse(swimming, yards * 1.09361, yards)
 }
+# swimming is a super specific case of this function. I think it would be helpful to make this a more general function, like, it will return the yards conversion if this logical vector is true
 
 semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
+# tidyfunc has to be initialized first
 
 #initial function for tidying Stravadata
 tidyfunc <- strav_data %>% 
@@ -46,7 +49,7 @@ tidyfunc <- strav_data %>%
   dplyr::rename(act_type = type) %>% 
   clean_names() %>% 
   mutate(is_swimming = act_type == "swimming",
-         distance = yardstometers(distance, is_swimming))
+         distance = yardstometers(distance, is_swimming)) %>% 
     # rounding values to remove clutter for visualization
  
   separate(start_date_local, c("date","time"), sep = " ") %>% 
@@ -77,6 +80,9 @@ activity_prop <- proportions_activity(tidyfunc$act_type)
 # tidyfunc %>% 
 #   sapply(activity_prop, function(x) filter(tidyfunc$type %in% x))
 
+# Very cool function, and very useful. You could also show the reader that they can increase the threshold from 1% and get a smaller list. I think it would be cool if you left a column that says how common each activity is (or maybe have two different functions here - one with a purpose of giving the percentage, and another with a purpose of returning a list of the ones that fall above a certain percentage)
+
+# Since this is a tutorial, I think it might be helpful to explain to the reader what this function is doing, since it's a really complicated one. Maybe show an example case and try to break it down?
 ```
 
 

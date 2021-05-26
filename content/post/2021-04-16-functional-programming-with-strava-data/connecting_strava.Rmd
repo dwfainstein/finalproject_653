@@ -59,6 +59,10 @@ For the next step, you will need to show your **Client Secret**, which will disp
 
 In your .Rmd, add the following lines of code:
 
+```{r}
+#Instead of commenting all of this out, you could do ```{r, eval = FALSE}
+```
+
     # ```{r}
     # 
     # library(rStrava)
@@ -147,4 +151,3 @@ After the Authorization is complete, you will have a file called *stoken* appear
 
 \#create the authentication token (only once)
 
-delete this line it's just me checking gitkraken
