@@ -63,7 +63,7 @@ daysoftheweek <- function(d, date) {
   print(weekday)
 }
 
-
+#RL note: when I run this, I get the error that 'weeklydata' is not found. Maybe this was renamed?
 byact <- weeklydata %>%
   group_by(act_type) %>%
   nest()
