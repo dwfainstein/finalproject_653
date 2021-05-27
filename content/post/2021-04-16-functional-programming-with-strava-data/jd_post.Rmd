@@ -75,6 +75,14 @@ In order to create lines that mimic the "ridge" effect, we'll also need to split
 In our example data frame, we'll split into the following activity types: 
 
 ```{r}
-tidyfunc
+# need function for picking out activities
+ex <-
+tidyfunc %>% 
+  filter(type == "Ride") %>% 
+  select(distance, elapsed_time, elev_high, elev_low, date)
+  
 ```
 
+Next, we'll split up our date column into 3 separate columns: year, month, and day. This will allow us to 
+
+## Step 3
