@@ -1,0 +1,41 @@
+---
+title: "Real-World Applications for Strava Data"
+author: "Makayla Whitney, Joe Swinehart, Janette Avelar, David Fainstein"
+date: "5/19/2021"
+slug: functional-programming-with-strava-data
+categories: R
+tags:
+- R
+- Strava
+---
+
+
+
+<p>This will produce an overlay of the Strava data (specifically bike rides) on top of Eugene, Oregon bike paths. City planners use Strava data to understand high-use areas within the city to help avoid accidents involving bikers and runners.</p>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   .default = col_double(),
+##   commute = col_logical(),
+##   display_hide_heartrate_option = col_logical(),
+##   external_id = col_character(),
+##   flagged = col_logical(),
+##   from_accepted_tag = col_logical(),
+##   has_heartrate = col_logical(),
+##   has_kudoed = col_logical(),
+##   heartrate_opt_out = col_logical(),
+##   manual = col_logical(),
+##   map.id = col_character(),
+##   map.summary_polyline = col_character(),
+##   name = col_character(),
+##   private = col_logical(),
+##   start_date = col_datetime(format = &quot;&quot;),
+##   start_date_local = col_datetime(format = &quot;&quot;),
+##   timezone = col_character(),
+##   trainer = col_logical(),
+##   type = col_character(),
+##   visibility = col_character(),
+##   device_watts = col_logical()
+##   # ... with 2 more columns
+## )
+## ℹ Use `spec()` for the full column specifications.</code></pre>

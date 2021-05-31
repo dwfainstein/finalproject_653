@@ -1,0 +1,14 @@
+Peer Review Notes 
+
+Lea Frank
+May 25th, 2021
+
+General comments:
+- I wasn't able to install rStrava with my version of R (4.1.0) so I would put a note about it in the read me file. I wasn't able to render the "jd_post.Rmd" without it
+- Maybe on the about page talk about what format the final project is in (e.g. is this a tutorial?)
+- Really cool data! Can't wait to see the final products
+
+Index File:
+- Is the tidyfunc variable supposed to be a function? Right now it just saves out the tidied dataframe
+- I really appreciate the commenting in your code, it's really helpful!
+- I would maybe name the file something other than "index" so that it's easier to match with the blog post. For example, giving it the same title as the blog post title
