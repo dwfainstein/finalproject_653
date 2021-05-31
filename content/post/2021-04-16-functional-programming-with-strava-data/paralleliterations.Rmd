@@ -29,7 +29,7 @@ We will begin by reading in a batch of data from one individual.
 
 ```{r firststep}
 #reading in data for sandbox
-strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
+strav_data <- read_csv(here::here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
 #initial function for tidying Stravadata
 tidydata <- strav_data %>% 
@@ -46,7 +46,7 @@ tidydata <- strav_data %>%
   filter(elapsed_time > 0,
          max_speed > average_speed)
 
-
+# If this is basically the same cleaning, you could export a cleaned version of your data file and put it in the data folder, then you can just pull from that in your other scripts?
 ```
 
 Then we will create a function that allows us to turn dates into days of the week and times into periods during the day. This will help us to categorize activities by days of the week and time periods within the day.
@@ -58,11 +58,10 @@ d <- tidydata %>%
 
 
 daysoftheweek <- function(d, date) {
-  date <- d(date = as.Date(c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))
+  date <- d(date = as.Date(c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) # I think r is confused here because date is being used as a function, not a dataset in this code
   weekday <- strftime(date$date, "%A")
   print(weekday)
 }
-
 
 byact <- weeklydata %>%
   group_by(act_type) %>%
@@ -92,5 +91,6 @@ walk2(paths, final_plots$eugeneroads, ggsave,
       height = 6.5,
       dpi = 500)
 
+# Great idea to get the plots by the day of the week. That's a very natural way to want to see your data
 ````
 
