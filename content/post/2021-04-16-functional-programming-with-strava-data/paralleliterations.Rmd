@@ -53,17 +53,19 @@ Then we will create a function that allows us to turn dates into days of the wee
 
 ```{r secondstep}
 
-d <- tidydata %>%
+#creating data
+weeklydata <- tidydata %>%
   select(date, time, act_type)
 
-
+#function to modify date format to day of the week
 daysoftheweek <- function(d, date) {
-  date <- d(date = as.Date(c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))
-  weekday <- strftime(date$date, "%A")
+  days_of_week <- c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+  date <- seq(Sys.Date() - 5, Sys.Date(), by = 1)
+  index <- as.POSIXlt(date)$way
   print(weekday)
 }
 
-
+#grouping data by activity
 byact <- weeklydata %>%
   group_by(act_type) %>%
   nest()
