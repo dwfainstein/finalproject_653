@@ -78,28 +78,39 @@ Then we will create a function that allows us to turn dates into days of the wee
 daysoftheweek <- function(x) format(as.Date(x), "%A")
 
 #creating data
-weeklydata <- tidydata %>%
-  mutate(weekday = daysoftheweek(date))
+weeklydata <- tidy_data %>%
+  mutate(weekday = daysoftheweek(date)) #%>%
+  #select(act_type, weekday)
 
 
+#one plot displaying a count of hikes by days of the week
+oneplot <- weeklydata %>%
+  filter(act_type == "Hike") %>%
+  ggplot(aes(weekday)) +
+  geom_histogram(stat = "count") +
+  guides(fill = "none") +
+      labs(title = "Number of Hikes by Days of the Week",
+           x = "",
+           y = "Number of Hikes")
 
 
-
-#grouping data by activity
-byact <- weeklydata %>%
+#multiple plots based on activity 
+byact <- weeklydata <- tidy_data %>%
+  mutate(weekday = daysoftheweek(date)) %>%
   group_by(act_type) %>%
-  nest()
+  nest() %>%
+  mutate(plots = map(data, ~{
+    ggplot(.x, aes(weekday)) +
+      geom_histogram(stat = "count")
+  }))
+
+#display plot
+weeklydata$plots[[2]]
+
 
 
 ```
 
-This is an iteration of weekly activity Monday - Sunday categorized by time of day. 
-
-```{r thirdstep}
-
-````
-
-This is another iteration of weekly activity Monday - Sunday categorized by time of day.
 
 ```{r fourthstep}
 
