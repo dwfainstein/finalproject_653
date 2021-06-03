@@ -19,7 +19,7 @@ library(purrr)
 library(repurrrsive)
 library(here)
 library(janitor)
-library(lubridate)
+library(glue)
 
 ```
 
@@ -77,10 +77,20 @@ Then we will create a function that allows us to turn dates into days of the wee
 
 daysoftheweek <- function(x) format(as.Date(x), "%A")
 
-library(glue)
+#one plot displaying a count of hikes by days of the week
+oneplot <- tidy_data %>%
+  mutate(weekday = daysoftheweek(date)) %>% 
+  filter(act_type == "Hike") %>%
+  ggplot(aes(weekday)) +
+  geom_histogram(stat = "count") +
+  guides(fill = "none") +
+      labs(title = "Number of Hikes by Days of the Week",
+           x = "",
+           y = "Number of Hikes")
 
-#creating data
-weeklydata <- tidy_data %>%
+#multiple plots based on activity 
+final_plots <-
+  weeklydata <- tidy_data %>%
   mutate(weekday = daysoftheweek(date)) %>% 
   group_by(act_type) %>% 
   nest() %>% 
@@ -93,27 +103,6 @@ weeklydata <- tidy_data %>%
   }))
 
 
-#one plot displaying a count of hikes by days of the week
-oneplot <- weeklydata %>%
-  filter(act_type == "Hike") %>%
-  ggplot(aes(weekday)) +
-  geom_histogram(stat = "count") +
-  guides(fill = "none") +
-      labs(title = "Number of Hikes by Days of the Week",
-           x = "",
-           y = "Number of Hikes")
-
-
-#multiple plots based on activity 
-byact <- weeklydata <- tidy_data %>%
-  mutate(weekday = daysoftheweek(date)) %>%
-  group_by(act_type) %>%
-  nest() %>%
-  mutate(plots = map(data, ~{
-    ggplot(.x, aes(weekday)) +
-      geom_histogram(stat = "count")
-  }))
-
 #display plot
 weeklydata$plots[[2]]
 
@@ -124,16 +113,17 @@ weeklydata$plots[[2]]
 
 ```{r fourthstep}
 
-#saving plots
-#create a directory
-fs::dir_create(here::here("final_plots", "eugeneroads"))
-paths <- here::here("final_plots", "eugeneroads", glue("{eugeneroads}.png"))
+# 1. create a directory
+fs::dir_create(here::here("plots", "act_type"))
+# 2. create file paths
+activity <- str_replace_all(tolower(final_plots$act_type), " ", "-")
+# find the spaces and replace them with dashes, while also changing everything to lowercase
+paths <- here::here("plots", "act_type", glue("{activity}.png"))
+paths
 
 #trying to find a way to fit this in
-walk2(paths, final_plots$eugeneroads, ggsave,
+walk2(paths, final_plots$plots, ggsave,
       width = 9.5, 
       height = 6.5,
       dpi = 500)
-
-````
 
