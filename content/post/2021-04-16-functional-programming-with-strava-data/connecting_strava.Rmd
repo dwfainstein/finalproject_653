@@ -9,6 +9,17 @@ tags:
 - Strava
 ---
 
+```{r xaringanExtra-clipboard, echo=FALSE}
+xaringanExtra::use_clipboard()
+
+#May need installation via 
+# install.packages("devtools")
+# devtools::install_github("gadenbuie/xaringanExtra")
+```
+
+
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -51,7 +62,7 @@ When you click on Create, it will ask you to update your app icon. You can add a
 
 <center>
 
-![completed API creation form](img/shot4.png){width="40%"}
+![click to reveal the secret!](img/shot4.png){width="40%"}
 
 </center>
 
@@ -143,8 +154,12 @@ Some things to note: be sure to enter your own **Application Name**, **Client ID
 
 Check both boxes, and then click Authorize to link Strava with your data.
 
+<center>
+
+![click to authorize](img/shot5.png){width="40%"}
+
+</center>
+
 After the Authorization is complete, you will have a file called *stoken* appear in your working environment. Once that file is in place, you can comment out the two lines of code directly under the spot where you entered your Client Secret. You will see a little note there that it only needs to happen once:
 
 \#create the authentication token (only once)
-
-delete this line it's just me checking gitkraken
