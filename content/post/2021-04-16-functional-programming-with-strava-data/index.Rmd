@@ -56,7 +56,7 @@ comprise three different types (e.g., hiking, running, and biking), and 2% of
 your activities comprise 4 types (e.g., stand-up paddle boarding, walking, rock
 climbing, and jump rope), then your visualization will be skewed. It is
 certainly possible to select specific activities to visualize, and this will be
-something you can read more about later. For now, we're going to pair down our
+something you can read more about later. For now, we're going to pare down our
 data to activity types that occur most commonly.
 ```{r SufficientActivities}
 # Using proportions could be useful to select only the most common activities (e.g., >1%)
@@ -70,12 +70,16 @@ proportions_activity <- function(activities, threshold = 0.02) {
 ```
 
 
+<<<<<<< Updated upstream
 The following code chunk takes data from the prior API calls and tidy's a
 dataframe for us using the two abovementioned functions. The custom functions
 are combined with pre-existing functions from the Tidyverse to whittle down the
 incoming data to it's most essential features and also excludes activities that
 you don't do very often (e.g., that one time you went stand up paddle boarding
 and recorded it on Strava).
+=======
+The following code chunk takes data from the prior API calls and tidies a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
+>>>>>>> Stashed changes
 ```{r secondstep, echo=TRUE}
 #reading in data for sandbox
 # Will be deleted for final project
