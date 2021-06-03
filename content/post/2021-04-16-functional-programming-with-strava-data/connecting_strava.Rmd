@@ -17,18 +17,17 @@ xaringanExtra::use_clipboard()
 # devtools::install_github("gadenbuie/xaringanExtra")
 ```
 
-
-
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Let's bring in your Strava data!
+## Importing Strava date for use with RStudio
 
 This blog post will guide you the somewhat complicated process of bringing in your own personal Strava data for use within the RStudio environment. To begin, you will need to have two things: an active Strava account and an RStudio .Rmd ready to use.
 
-First, visit <https://www.strava.com/settings/api>. If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.
+First, visit <https://www.strava.com/settings/api>.
+
+If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.
 
 <center>
 
@@ -163,3 +162,5 @@ Check both boxes, and then click Authorize to link Strava with your data.
 After the Authorization is complete, you will have a file called *stoken* appear in your working environment. Once that file is in place, you can comment out the two lines of code directly under the spot where you entered your Client Secret. You will see a little note there that it only needs to happen once:
 
 \#create the authentication token (only once)
+
+Once you run that chunk, it will download your data into a dataframe called "*data_df.Rda*" which can be added to RStudio for your continued exploration.
