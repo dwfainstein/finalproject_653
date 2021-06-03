@@ -70,7 +70,12 @@ proportions_activity <- function(activities, threshold = 0.02) {
 ```
 
 
-The following code chunk takes data from the prior API calls and tidy's a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
+The following code chunk takes data from the prior API calls and tidy's a
+dataframe for us using the two abovementioned functions. The custom functions
+are combined with pre-existing functions from the Tidyverse to whittle down the
+incoming data to it's most essential features and also excludes activities that
+you don't do very often (e.g., that one time you went stand up paddle boarding
+and recorded it on Strava).
 ```{r secondstep, echo=TRUE}
 #reading in data for sandbox
 # Will be deleted for final project
@@ -85,11 +90,8 @@ tidyfunc <- strav_data %>%
   dplyr::rename(act_type = type) %>% 
   clean_names() %>% 
   mutate(is_swimming = act_type == "swimming",
-         distance = yardstometers(distance, is_swimming))
+         distance = yardstometers(distance, is_swimming)) %>% 
     # rounding values to remove clutter for visualization
-
-semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
- 
   separate(start_date_local, c("date","time"), sep = " ") %>% 
   select(-start_date) %>% 
     #separating out date & time; excluding multiple dates and times
@@ -97,6 +99,7 @@ semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
          max_speed > average_speed)
     # removes activities with no duration (which rules out manually entered activities where no time is supplied) and also incorrect calculations where Strava defines the an average speed that is higher than the max speed (this most often occurs in swimming)
 
+tidied_data <- semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
 
 
 ```
