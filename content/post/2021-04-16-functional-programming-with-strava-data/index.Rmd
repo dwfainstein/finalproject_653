@@ -24,19 +24,58 @@ library(dplyr)
 
 ```
 
-Strava (http://labs.strava.com) is a data rich platform to collect, store, and use physical activity data. One key challenge faced by many sporting enthusiasts is how to effectively take control of their own data to make novel and interesting visualizations or depictions of one's hard work. In some senses, Strava makes this easy by packing your data for you with options on how you wish to view your achievements. For the DIY'er, the story is a little more complicated. As we've outlined above with the reading in of your personal Strava data, there is a consistent theme of following key steps to have our data ready for your most creative projects.
+Strava (http://labs.strava.com) is a data rich platform to collect, store, and
+use physical activity data. One key challenge faced by many sporting enthusiasts
+is how to effectively take control of their own data to make novel and
+interesting visualizations or depictions of one's hard work. In some senses,
+Strava makes this easy by packing your data for you with options on how you wish
+to view your achievements. For the DIY'er, the story is a little more
+complicated. As we've outlined above with the reading in of your personal Strava
+data, there is a consistent theme of following key steps to have our data ready
+for your most creative projects.
 
-The following code chunk takes data from the prior API calls and tidy's a dataframe for use. There are a few functions embedded that whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
+We have a two key important functions that will help us manage Strava-specific
+data. First, there's a tricky default where Strava imports swimming data with
+yards as the unit of measurement. This is in contrast to the remainder of
+activities, which seem to default to either the metric or imperial units defined
+when you start your account. In recognizing that other activities (e.g.,
+sprinting) may be recorded in inappropriate units (e.g., miles for sprinting,
+when feet is preferable), the following function is flexible to incorporate
+other conversions that you deem appropriate:
+```{r conversion_function}
+yardstometers <- function(yards, swimming) {
+  ifelse(swimming, yards * 1.09361, yards)
+}
+
+```
+
+
+We also want to sort out which activities occurred frequently enough that they
+would be useful to display visually. In our view, having 98% of your activities
+comprise three different types (e.g., hiking, running, and biking), and 2% of
+your activities comprise 4 types (e.g., stand-up paddle boarding, walking, rock
+climbing, and jump rope), then your visualization will be skewed. It is
+certainly possible to select specific activities to visualize, and this will be
+something you can read more about later. For now, we're going to pair down our
+data to activity types that occur most commonly.
+```{r SufficientActivities}
+# Using proportions could be useful to select only the most common activities (e.g., >1%)
+proportions_activity <- function(activities, threshold = 0.02) {
+  temp <- map_dbl(split(activities, activities), length) / length(activities)
+  d <- data.frame(act_type = names(temp),
+             gt_threshold = temp > threshold)
+  d[d$gt_threshold, "act_type", drop = FALSE]
+}
+
+```
+
+
+The following code chunk takes data from the prior API calls and tidy's a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
 ```{r secondstep, echo=TRUE}
 #reading in data for sandbox
 # Will be deleted for final project
 strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
-yardstometers <- function(yards, swimming) {
-  ifelse(swimming, yards * 1.09361, yards)
-}
-
-semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
 
 #initial function for tidying Stravadata
 tidyfunc <- strav_data %>% 
@@ -48,6 +87,8 @@ tidyfunc <- strav_data %>%
   mutate(is_swimming = act_type == "swimming",
          distance = yardstometers(distance, is_swimming))
     # rounding values to remove clutter for visualization
+
+semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
  
   separate(start_date_local, c("date","time"), sep = " ") %>% 
   select(-start_date) %>% 
@@ -59,36 +100,3 @@ tidyfunc <- strav_data %>%
 
 
 ```
-
-After our data has a first-pass-tidy, we want to sort out which activities occurred frequently enough that they would be useful to display visually. In our view, having 98% of your activities comprise three different types (e.g., hiking, running, and biking), and 2% of your activities comprise 4 types (e.g., stand-up paddle boarding, walking, rock climbing, and jump rope), then your visualization will be skewed. It is certainly possible to select specific activities to visualize, and this will be something you can read more about later. For now, we're going to pair down our data to activity types that occur most commonly.
-
-```{r SufficientActivities}
-#Function borrowed directly from Lab3 to determine percentage of each activity in dataset
-# Using proportions could be useful to select only the most common activities (e.g., >1%)
-proportions_activity <- function(activities, threshold = 0.01) {
-  temp <- map_dbl(split(activities, activities), length) / length(activities)
-  d <- data.frame(act_type = names(temp),
-             gt_threshold = temp > threshold)
-  d[d$gt_threshold, "act_type", drop = FALSE]
-}
-activity_prop <- proportions_activity(tidyfunc$act_type)
-
-
-# tidyfunc %>% 
-#   sapply(activity_prop, function(x) filter(tidyfunc$type %in% x))
-
-```
-
-
-```{r thirdstep}
-
-````
-
-
-```{r fourthstep}
-
-````
-
-
-
-
