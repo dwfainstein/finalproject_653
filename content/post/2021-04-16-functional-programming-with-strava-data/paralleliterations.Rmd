@@ -77,10 +77,20 @@ Then we will create a function that allows us to turn dates into days of the wee
 
 daysoftheweek <- function(x) format(as.Date(x), "%A")
 
+library(glue)
+
 #creating data
 weeklydata <- tidy_data %>%
-  mutate(weekday = daysoftheweek(date)) #%>%
-  #select(act_type, weekday)
+  mutate(weekday = daysoftheweek(date)) %>% 
+  group_by(act_type) %>% 
+  nest() %>% 
+  mutate(plots = map2(data, act_type, ~{
+    ggplot(.x, aes(weekday)) +
+      geom_histogram(stat = "count") +
+      labs(title = glue("Number of {.y} by Days of the Week"),
+          x = "",
+          y = glue("Number of {.y}"))
+  }))
 
 
 #one plot displaying a count of hikes by days of the week
