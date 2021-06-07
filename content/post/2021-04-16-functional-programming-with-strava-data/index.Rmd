@@ -1,12 +1,13 @@
 ---
-title: "Functional Programming with Strava Data"
-author: "R package build"
+title: Functional Programming with Strava Data
+author: R package build
 date: '2021-04-16'
-slug: functional-programming-with-strava-data
-categories: R
+categories:
+  - R
 tags:
-- R
-- Strava
+  - R
+  - Strava
+slug: functional-programming-with-strava-data
 ---
 
 
@@ -21,6 +22,11 @@ library(here)
 library(janitor)
 library(lubridate)
 library(dplyr)
+
+#reading in data for demonstration purposes. 
+strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
+
+
 
 ```
 
@@ -42,11 +48,10 @@ when you start your account. In recognizing that other activities (e.g.,
 sprinting) may be recorded in inappropriate units (e.g., miles for sprinting,
 when feet is preferable), the following function is flexible to incorporate
 other conversions that you deem appropriate:
-```{r conversion_function}
+```{r conversion_function, echo=TRUE}
 yardstometers <- function(yards, swimming) {
   ifelse(swimming, yards * 1.09361, yards)
 }
-
 ```
 
 
@@ -58,7 +63,7 @@ climbing, and jump rope), then your visualization will be skewed. It is
 certainly possible to select specific activities to visualize, and this will be
 something you can read more about later. For now, we're going to pare down our
 data to activity types that occur most commonly.
-```{r SufficientActivities}
+```{r SufficientActivities, echo=TRUE}
 # Using proportions could be useful to select only the most common activities (e.g., >1%)
 proportions_activity <- function(activities, threshold = 0.02) {
   temp <- map_dbl(split(activities, activities), length) / length(activities)
@@ -70,21 +75,16 @@ proportions_activity <- function(activities, threshold = 0.02) {
 ```
 
 
-<<<<<<< Updated upstream
 The following code chunk takes data from the prior API calls and tidy's a
 dataframe for us using the two abovementioned functions. The custom functions
 are combined with pre-existing functions from the Tidyverse to whittle down the
 incoming data to it's most essential features and also excludes activities that
 you don't do very often (e.g., that one time you went stand up paddle boarding
 and recorded it on Strava).
-=======
-The following code chunk takes data from the prior API calls and tidies a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
->>>>>>> Stashed changes
-```{r secondstep, echo=TRUE}
-#reading in data for sandbox
-# Will be deleted for final project
-strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
 
+
+The following code chunk takes data from the prior API calls and tidies a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
+```{r secondstep, echo=TRUE, warning=FALSE, message = FALSE}
 
 #initial function for tidying Stravadata
 tidyfunc <- strav_data %>% 
