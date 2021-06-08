@@ -10,8 +10,8 @@ tags:
 ---
 
 
-```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r setup, include=FALSE, echo= FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 #note: include = FALSE and echo = FALSE for now, but it will still print messages and can be coerced to show full chunks of code if we desire
 
 library(tidyverse)
