@@ -21,9 +21,17 @@ xaringanExtra::use_clipboard()
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Importing Strava date for use with RStudio
+# Importing Strava data for use with RStudio
 
 This blog post will guide you the somewhat complicated process of bringing in your own personal Strava data for use within the RStudio environment. To begin, you will need to have two things: an active Strava account and an RStudio .Rmd ready to use.
+
+This post will cover two distinct two ways to download your data.
+
+[The first method: complex and limited (but small!)](#the-first-method-complex-and-limited-but-small) is somewhat complex, and uses API calls to return a dataframe containing a fairly limited set of information: Distance, speed, duration, elevation, location, and time.
+
+[The second method: quick and easy, but can be a very large download!] (just threaten to delete your account and they will give you an option to download all data they have collected!) and returns a much larger set of information...all of the preceding information, plus entire route maps for each activity, as well any photos you uploaded to Strava with those activities.
+
+## The first method: complex and limited (but small!) {#the-first-method-complex-and-limited-but-small}
 
 First, visit <https://www.strava.com/settings/api>.
 
@@ -69,86 +77,52 @@ For the next step, you will need to show your **Client Secret**, which will disp
 
 In your .Rmd, add the following lines of code:
 
-    # ```{r}
-    # 
-    # library(rStrava)
-    # 
-    # library(plyr)
-    # 
-    # app_name <- "ENTER_YOUR_APP_NAME_HERE "
-    # 
-    # app_client_id <- "ENTER_YOUR_CLIENT_ID_HERE"
-    # 
-    # app_secret <- "ENTER_YOUR_CLIENT_SECRET_HERE"
-    # 
-    # #create the authentication token (only once)
-    # 
-    # stoken <- httr::config(token = strava_oauth(app_name, app_client_id, app_secret,
-    # 
-    # app_scope="activity:read_all", cache=TRUE))
-    # 
-    # #retrieve local token
-    # 
-    # stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
-    # 
-    # filename_raw <- "./data_raw.Rda"
-    # 
-    # filename_df <- "./data_df.Rda"
-    # 
-    # if (file.exists(filename_df)) {
-    # 
-    # cat("….. download last week")
-    # 
-    # load("./data_df.Rda")
-    # 
-    # # create empty data frame with same amount of columns as existing data,
-    # 
-    # # otherwise column mismatch may occur
-    # 
-    # df_empty <- df_activities[0,]
-    # 
-    # # define last date minus 1 week for corrections
-    # 
-    # last_date <- as.Date(max(df_activities$start_date))-7
-    # 
-    # # get new activities and place in data frame
-    # 
-    # new_activities <- get_activity_list(stoken, after = last_date)
-    # 
-    # df_new_activities <- compile_activities(new_activities, units="metric")
-    # 
-    # df_new_activities <- rbind.fill(df_empty,df_new_activities)
-    # 
-    # # replace existing records with updated ones, ignore the warnings
-    # 
-    # suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
-    # 
-    # # combine dataframes
-    # 
-    # df_activities <- rbind.fill(df_activities,df_new_activities)
-    # 
-    # df_activities <- unique(df_activities)
-    # 
-    # }
-    # 
-    # {
-    # 
-    # cat("….. Downloading from 2004, this takes some time")
-    # 
-    # last_date <- as.Date("2004-01-01")
-    # 
-    # activities <- get_activity_list(stoken, after = last_date)
-    # 
-    # df_activities <- compile_activities(activities, units="metric")
-    # 
-    # }
-    # 
-    # # store dataframe
-    # 
-    # save(df_activities, file="data_df.Rda")
+    ```{r eval=FALSE}
 
-    ```
-
+    library(rStrava)
+    library(plyr)
+    
+    app_name <- "ENTER_YOUR_APP_NAME_HERE "
+    app_client_id <- "ENTER_YOUR_CLIENT_ID_HERE"
+    app_secret <- "ENTER_YOUR_CLIENT_SECRET_HERE"
+    
+    #create the authentication token (only once)
+    #stoken <- httr::config(token = strava_oauth(app_name, app_client_id, app_secret,
+    #app_scope="activity:read_all", cache=TRUE))
+    
+    #retrieve local token
+stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
+filename_raw <- "./data_raw.Rda"
+filename_df <- "./data_df.Rda"
+if (file.exists(filename_df)) {
+   cat("….. download last week")
+   load("./data_df.Rda")       
+# create empty data frame with same amount of columns as existing data, 
+# otherwise column mismatch may occur                          
+   df_empty <- df_activities[0,]
+                                        
+# define last date minus 1 week for corrections 
+   last_date <- as.Date(max(df_activities$start_date))-7             
+# get new activities and place in data frame   
+   new_activities <- get_activity_list(stoken, after = last_date)
+   df_new_activities <- compile_activities(new_activities, units="metric")
+   df_new_activities <- rbind.fill(df_empty,df_new_activities)
+# replace existing records with updated ones, ignore the warnings 
+suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
+# combine dataframes
+  df_activities <- rbind.fill(df_activities,df_new_activities)    
+  df_activities <- unique(df_activities)    
+} 
+ {
+   cat("….. Downloading from 2004, this takes some time")
+   last_date <- as.Date("2004-01-01")
+   activities <- get_activity_list(stoken, after = last_date)
+   df_activities <- compile_activities(activities, units="metric")
+ }
+# store dataframe
+save(df_activities, file="data_df.Rda")
+```
+    
 Some things to note: be sure to enter your own **Application Name**, **Client ID**, and **Client Secret** in the correct spots. After running that code chunk, you should connect to the Strava website for authorization.
 
 Check both boxes, and then click Authorize to link Strava with your data.
@@ -163,4 +137,44 @@ After the Authorization is complete, you will have a file called *stoken* appear
 
 \#create the authentication token (only once)
 
-Once you run that chunk, it will download your data into a dataframe called "*data_df.Rda*" which can be added to RStudio for your continued exploration.
+Once you run that chunk, it will download your data into a dataframe called "**data_df.Rda**" which a simple click will add to RStudio for your continued exploration.
+
+<br> <br>
+
+## The second method: quick and easy, but can be a very large download!
+
+This method is pretty simple. Simply visit <https://www.strava.com/athlete/delete_your_account> and scroll down a bit to the *Download Request* section.
+
+<center>
+
+![But I don't want to delete my account!](img/shot7.png){width="30%"}
+
+</center>
+
+Click on the Request Your Archive button, and they will prepare your archive and email you a download link to the email they have on file. Make sure your email address is up to date!
+
+<center>
+
+![Seven days to get this done!](img/shot8.png){width="30%"}
+
+</center>
+
+Soon, you will get a download link in your email. Click to download, and you will soon have a folder full of everything that Strava has collected on you as an athlete.
+
+The most useful files for Rstudio will the .csv that houses all of your activity data, and the .gpx files that contain a fairly complete map every individual activity.
+
+To add the .csv file, make sure that activities.csv file is housed in a **data** folder in your project directory, and then run the following code:
+
+```{r importing desired data fields, eval=FALSE}
+library(readr)
+activities <- read_csv("data/activities.csv",
+    col_types = cols_only(`Activity ID` = col_number(),
+                          `Activity Date` =col_character(),
+                          `Activity Name` =col_character(),
+                          `Activity Type` =col_character(),
+                          `Elapsed Time` =col_number(),
+                          `Distance` =col_number(),
+                          `Elevation Gain` =col_number()))
+View(activities)
+
+```
