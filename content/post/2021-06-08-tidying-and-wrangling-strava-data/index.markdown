@@ -1,0 +1,89 @@
+---
+title: Tidying and Wrangling Strava Data
+author: R package build
+date: '2021-06-02'
+slug: tidying-and-wrangling-strava-data
+categories: []
+tags: []
+---
+
+
+
+
+
+Strava (http://labs.strava.com) is a data rich platform to collect, store, and
+use physical activity data. One key challenge faced by many sporting enthusiasts
+is how to effectively take control of their own data to make novel and
+interesting visualizations or depictions of one's hard work. In some senses,
+Strava makes this easy by packing your data for you with options on how you wish
+to view your achievements. For the DIY'er, the story is a little more
+complicated. As we've outlined above with the reading in of your personal Strava
+data, there is a consistent theme of following key steps to have our data ready
+for your most creative projects.
+
+We have a two key important functions that will help us manage Strava-specific
+data. First, there's a tricky default where Strava imports swimming data with
+yards as the unit of measurement. This is in contrast to the remainder of
+activities, which seem to default to either the metric or imperial units defined
+when you start your account. In recognizing that other activities (e.g.,
+sprinting) may be recorded in inappropriate units (e.g., miles for sprinting,
+when feet is preferable), the following function is flexible to incorporate
+other conversions that you deem appropriate:
+
+```r
+yardstometers <- function(yards, swimming) {
+  ifelse(swimming, yards * 1.09361, yards)
+}
+```
+
+
+We also want to sort out which activities occurred frequently enough that they
+would be useful to display visually. In our view, having 98% of your activities
+comprise three different types (e.g., hiking, running, and biking), and 2% of
+your activities comprise 4 types (e.g., stand-up paddle boarding, walking, rock
+climbing, and jump rope), then your visualization will be skewed. It is
+certainly possible to select specific activities to visualize, and this will be
+something you can read more about later. For now, we're going to pare down our
+data to activity types that occur most commonly.
+
+```r
+# Using proportions could be useful to select only the most common activities (e.g., >1%)
+proportions_activity <- function(activities, threshold = 0.02) {
+  temp <- map_dbl(split(activities, activities), length) / length(activities)
+  d <- data.frame(act_type = names(temp),
+             gt_threshold = temp > threshold)
+  d[d$gt_threshold, "act_type", drop = FALSE]
+}
+```
+
+
+The following code chunk takes data from the prior API calls and tidy's a
+dataframe for us using the two abovementioned functions. The custom functions
+are combined with pre-existing functions from the Tidyverse to whittle down the
+incoming data to it's most essential features and also excludes activities that
+you don't do very often (e.g., that one time you went stand up paddle boarding
+and recorded it on Strava).
+
+
+The following code chunk takes data from the prior API calls and tidies a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
+
+```r
+#initial function for tidying Stravadata
+tidyfunc <- strav_data %>% 
+  select(where(~length(unique(.)) > 1)) %>%
+    # selecting unique values
+  mutate(type = as.factor(type)) %>% 
+  dplyr::rename(act_type = type) %>% 
+  clean_names() %>% 
+  mutate(is_swimming = act_type == "swimming",
+         distance = yardstometers(distance, is_swimming)) %>% 
+    # rounding values to remove clutter for visualization
+  separate(start_date_local, c("date","time"), sep = " ") %>% 
+  select(-start_date) %>% 
+    #separating out date & time; excluding multiple dates and times
+  filter(elapsed_time > 0,
+         max_speed > average_speed)
+    # removes activities with no duration (which rules out manually entered activities where no time is supplied) and also incorrect calculations where Strava defines the an average speed that is higher than the max speed (this most often occurs in swimming)
+
+tidied_data <- semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
+```

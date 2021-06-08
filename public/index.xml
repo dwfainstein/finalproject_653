@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>A Hugo website</title>
+    <link>/</link>
+    <description>Recent content on A Hugo website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
+      
+      <guid>/about/</guid>
+      <description>This is a &amp;ldquo;hello world&amp;rdquo; example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
+    </item>
+    
+    <item>
+      <title>connecting_strava</title>
+      <link>/1/01/01/functional-programming-with-strava-data/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/1/01/01/functional-programming-with-strava-data/</guid>
+      <description>Let’s bring in your Strava data! This blog post will guide you the somewhat complicated process of bringing in your own personal Strava data for use within the RStudio environment. To begin, you will need to have two things: an active Strava account and an RStudio .Rmd ready to use.
+First, visit https://www.strava.com/settings/api. If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.</description>
+    </item>
+    
+  </channel>
+</rss>
