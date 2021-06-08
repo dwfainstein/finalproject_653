@@ -90,7 +90,8 @@ oneplot <- tidy_data %>%
   ggplot(aes(weekday)) +
   geom_bar(stat = "count") +
   guides(fill = "none") +
-      labs(title = "Number of Hikes by Days of the Week",
+      labs(title = "Amount of Hikes over the week",
+           subtitle = "Data displays trends found within the week"
            x = "",
            y = "Number of Hikes")
 ```
