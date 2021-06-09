@@ -33,11 +33,11 @@ This post will cover two distinct two ways to download your data.
 
 First, visit <https://www.strava.com/settings/api>.
 
-If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.
+If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application. DOES THIS SHOW UP? WHY DOES IT SHOW UP WHEN I KNIT, BUT NOT ON THE SERVED SITE?
 
 <center>
 
-![initial API screen](img/shot1.png){width="40%"}
+![initial API screen](img/shot1.png){width=250px}
 
 </center>
 
@@ -179,9 +179,9 @@ View(activities)
 
 Once you have done that, you should have a .csv file with all of your activities. If you would also like to work with the .gpx files for detailed maps of everything you've done, the following code will do the trick:
 
-```{r bringing in the gpx data (and a commented out line to show how you can easily remove any bad data) eval=FALSE}
+```{r bringing in the gpx data, eval=FALSE}
 gpxdata <- process_data("data/activities_gpx")
-#gpxdata <- slice(gpxdata, -c(63744, 63745, 63746))
+#gpxdata <- slice(gpxdata, -c(63744, 63745, 63746)) YOU MIGHT NEED TO USE SOMETHINNG LIKE THIS LINE IF YOU BRING IN IN ANY BAD DATA...I DID
 ```
 
 You will have to wait a while, as this is quite a large file to bring in...but once it is in, you will have quite a few options for manipulating your data!
