@@ -15,7 +15,6 @@ tags: []
 
 
 
-
 # Importing Strava data for use with RStudio
 
 This blog post will guide you the somewhat complicated process of bringing in your own personal Strava data for use within the RStudio environment. To begin, you will need to have two things: an active Strava account and an RStudio .Rmd ready to use.
@@ -34,7 +33,7 @@ If you are not logged in, it will prompt you to enter your login credentials. On
 
 <center>
 
-![initial API screen](img/shot1.png){width="40%"}
+![initial API screen](img/shot1.png)
 
 </center>
 
@@ -56,7 +55,7 @@ When you are done, you should have it filled out something like this:
 
 <center>
 
-![completed API creation form](img/shot2.png){width="40%"}
+![completed API creation form](img/shot2.png)
 
 </center>
 
@@ -64,7 +63,7 @@ When you click on Create, it will ask you to update your app icon. You can add a
 
 <center>
 
-![click to reveal the secret!](img/shot4.png){width="40%"}
+![click to reveal the secret!](img/shot4.png)
 
 </center>
 
@@ -117,14 +116,14 @@ In your .Rmd, add the following lines of code:
     # store dataframe
     save(df_activities, file="data_df.Rda")
     ```
-    
+
 Some things to note: be sure to enter your own **Application Name**, **Client ID**, and **Client Secret** in the correct spots. After running that code chunk, you should connect to the Strava website for authorization.
 
 Check both boxes, and then click Authorize to link Strava with your data.
 
 <center>
 
-![click to authorize](img/shot5.png){width="40%"}
+![click to authorize](img/shot5.png)
 
 </center>
 
@@ -142,7 +141,7 @@ This method is pretty simple. Simply visit <https://www.strava.com/athlete/delet
 
 <center>
 
-![But I don't want to delete my account!](img/shot7.png){width="30%"}
+![But I don't want to delete my account!](img/shot7.png)
 
 </center>
 
@@ -150,7 +149,7 @@ Click on the Request Your Archive button, and they will prepare your archive and
 
 <center>
 
-![Seven days to get this done!](img/shot8.png){width="30%"}
+![Seven days to get this done!](img/shot8.png)
 
 </center>
 
@@ -173,3 +172,13 @@ activities <- read_csv("data/activities.csv",
                           `Elevation Gain` =col_number()))
 View(activities)
 ```
+
+Once you have done that, you should have a .csv file with all of your activities. If you would also like to work with the .gpx files for detailed maps of everything you've done, the following code will do the trick:
+
+
+```r
+gpxdata <- process_data("data/activities_gpx")
+#gpxdata <- slice(gpxdata, -c(63744, 63745, 63746)) YOU MIGHT NEED TO USE SOMETHINNG LIKE THIS LINE IF YOU BRING IN IN ANY BAD DATA...I DID
+```
+
+You will have to wait a while, as this is quite a large file to bring in...but once it is in, you will have quite a few options for manipulating your data! As a first step, you will want to tidy your imported data. See David's informative blog post for more details on how to do that.

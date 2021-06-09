@@ -45,7 +45,7 @@ We're going to do a bit of jumping ahead, by assuming you have already loaded in
 This is how your data frame should look assuming you followed the directions in the previous post:
 
 ```{r}
-rmardown::paged_table(tidyfunc)
+#rmarkdown::paged_table(tidyfunc) Janette I hid this as it was causing me some woes.
 ```
 
 ## Step 1
@@ -76,10 +76,11 @@ In our example data frame, we'll split into the following activity types:
 
 ```{r}
 # need function for picking out activities
-ex <-
-tidyfunc %>% 
-  filter(type == "Ride") %>% 
-  select(distance, elapsed_time, elev_high, elev_low, date)
+#ex <-
+#tidyfunc %>% 
+  #filter(type == "Ride") %>% 
+ # select(distance, elapsed_time, elev_high, elev_low, date)
+#I hid this too
   
 ```
 
