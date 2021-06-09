@@ -1,0 +1,55 @@
+---
+title: OH SNAP IT IS BONUS CONTENT
+author: JOE
+date: '2021-06-08'
+slug: oh-snap-it-is-bonus-content
+categories:
+  - R
+  - map
+  - ggplot
+  - wizard
+tags:
+  - fire emoji here
+---
+
+```{r we might need extra credit, echo=FALSE}
+library(ggplot2)
+library(dplyr)
+all_states <- map_data("state")  
+p <- ggplot()
+p <- p + geom_polygon( data=all_states, aes(x=long, y=lat, group = group),colour="white", fill="grey30" )
+
+
+ny <- filter(all_states, region == "new york")
+wa <- filter(all_states, region == "washington")
+id <- filter(all_states, region == "idaho")
+mt <- filter(all_states, region == "montana")
+nd <- filter(all_states, region == "north dakota")
+mi <- filter(all_states, region == "michigan")
+me <- filter(all_states, region == "maine")
+vt <- filter(all_states, region == "vermont")
+mn <- filter(all_states, region == "minnesota")
+wi <- filter(all_states, region == "wisconsin")
+nh <- filter(all_states, region == "new hampshire")
+
+
+
+
+
+p + geom_polygon(data = ny, aes(x=long, y=lat, group = group),fill="yellow") +
+  geom_polygon(data = wa, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = id, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = mt, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = nd, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = mi, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = vt, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = mn, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = wi, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = me, aes(x=long, y=lat, group = group),fill="yellow")+
+  geom_polygon(data = nh, aes(x=long, y=lat, group = group),fill="yellow") + 
+  labs(title = "Top 10 US States",
+       subtitle = "This is a map of the top 10 states in the United States.",
+       caption = "Actually it's the top 11 but that sounded dorky. Also don't tell Alaska about this.") + 
+  theme(panel.background = element_rect(color = "black", fill = "lightblue"))
+```
+
