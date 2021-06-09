@@ -7,7 +7,6 @@ categories: []
 tags: []
 ---
 
-
 ```{r xaringanExtra-clipboard, echo=FALSE}
 xaringanExtra::use_clipboard()
 
@@ -80,48 +79,48 @@ In your .Rmd, add the following lines of code:
 
     library(rStrava)
     library(plyr)
-    
+
     app_name <- "ENTER_YOUR_APP_NAME_HERE "
     app_client_id <- "ENTER_YOUR_CLIENT_ID_HERE"
     app_secret <- "ENTER_YOUR_CLIENT_SECRET_HERE"
-    
+
     #create the authentication token (only once)
     #stoken <- httr::config(token = strava_oauth(app_name, app_client_id, app_secret,
     #app_scope="activity:read_all", cache=TRUE))
-    
+
     #retrieve local token
-stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
-filename_raw <- "./data_raw.Rda"
-filename_df <- "./data_df.Rda"
-if (file.exists(filename_df)) {
-   cat("….. download last week")
-   load("./data_df.Rda")       
-# create empty data frame with same amount of columns as existing data, 
-# otherwise column mismatch may occur                          
-   df_empty <- df_activities[0,]
+    stoken <- httr::config(token = readRDS('.httr-oauth')[[1]])
+    filename_raw <- "./data_raw.Rda"
+    filename_df <- "./data_df.Rda"
+    if (file.exists(filename_df)) {
+       cat("….. download last week")
+       load("./data_df.Rda")       
+    # create empty data frame with same amount of columns as existing data, 
+    # otherwise column mismatch may occur                          
+       df_empty <- df_activities[0,]
                                         
-# define last date minus 1 week for corrections 
-   last_date <- as.Date(max(df_activities$start_date))-7             
-# get new activities and place in data frame   
-   new_activities <- get_activity_list(stoken, after = last_date)
-   df_new_activities <- compile_activities(new_activities, units="metric")
-   df_new_activities <- rbind.fill(df_empty,df_new_activities)
-# replace existing records with updated ones, ignore the warnings 
-suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
-# combine dataframes
-  df_activities <- rbind.fill(df_activities,df_new_activities)    
-  df_activities <- unique(df_activities)    
-} 
- {
-   cat("….. Downloading from 2004, this takes some time")
-   last_date <- as.Date("2004-01-01")
-   activities <- get_activity_list(stoken, after = last_date)
-   df_activities <- compile_activities(activities, units="metric")
- }
-# store dataframe
-save(df_activities, file="data_df.Rda")
-```
-    
+    # define last date minus 1 week for corrections 
+       last_date <- as.Date(max(df_activities$start_date))-7             
+    # get new activities and place in data frame   
+       new_activities <- get_activity_list(stoken, after = last_date)
+       df_new_activities <- compile_activities(new_activities, units="metric")
+       df_new_activities <- rbind.fill(df_empty,df_new_activities)
+    # replace existing records with updated ones, ignore the warnings 
+    suppressWarnings(df_activities[df_activities$id %in% df_new_activities$id, ] <- df_new_activities)
+    # combine dataframes
+      df_activities <- rbind.fill(df_activities,df_new_activities)    
+      df_activities <- unique(df_activities)    
+    } 
+     {
+       cat("….. Downloading from 2004, this takes some time")
+       last_date <- as.Date("2004-01-01")
+       activities <- get_activity_list(stoken, after = last_date)
+       df_activities <- compile_activities(activities, units="metric")
+     }
+    # store dataframe
+    save(df_activities, file="data_df.Rda")
+    ```
+
 Some things to note: be sure to enter your own **Application Name**, **Client ID**, and **Client Secret** in the correct spots. After running that code chunk, you should connect to the Strava website for authorization.
 
 Check both boxes, and then click Authorize to link Strava with your data.
@@ -177,3 +176,12 @@ activities <- read_csv("data/activities.csv",
 View(activities)
 
 ```
+
+Once you have done that, you should have a .csv file with all of your activities. If you would also like to work with the .gpx files for detailed maps of everything you've done, the following code will do the trick:
+
+```{r bringing in the gpx data (and a commented out line to show how you can easily remove any bad data) eval=FALSE}
+gpxdata <- process_data("data/activities_gpx")
+#gpxdata <- slice(gpxdata, -c(63744, 63745, 63746))
+```
+
+You will have to wait a while, as this is quite a large file to bring in...but once it is in, you will have quite a few options for manipulating your data!
