@@ -20,9 +20,10 @@ library(here)
 library(janitor)
 library(lubridate)
 library(dplyr)
+library(reactable)
 
 #reading in data for demonstration purposes. 
-strav_data <- read_csv(here("content/post/2021-04-16-functional-programming-with-strava-data/data", "strav_csv.csv"))
+strav_data <- read_csv(here("content/post/2021-06-08-tidying-and-wrangling-strava-data/data", "strav_csv.csv"))
 
 
 
@@ -72,7 +73,6 @@ proportions_activity <- function(activities, threshold = 0.02) {
 
 ```
 
-
 The following code chunk takes data from the prior API calls and tidy's a
 dataframe for us using the two abovementioned functions. The custom functions
 are combined with pre-existing functions from the Tidyverse to whittle down the
@@ -80,8 +80,6 @@ incoming data to it's most essential features and also excludes activities that
 you don't do very often (e.g., that one time you went stand up paddle boarding
 and recorded it on Strava).
 
-
-The following code chunk takes data from the prior API calls and tidies a dataframe for us using the two abovementioned functions. The custom functions are combined with pre-existing functions from the Tidyverse to whittle down the incoming data to it's most essential features and also excludes activities that you don't do very often (e.g., that one time you went stand up paddle boarding and recorded it on Strava). 
 ```{r secondstep, echo=TRUE, warning=FALSE, message = FALSE}
 
 #initial function for tidying Stravadata
@@ -105,3 +103,33 @@ tidied_data <- semi_join(tidyfunc, proportions_activity(tidyfunc$act_type))
 
 
 ```
+
+You will still be left with plenty of data at your disposal, we didn't remove
+**too** much evidence of your exemplary physical fitness accomplishments.
+However, it may be worth your while to peruse this table of example data (again,
+following the previous blog post on API calls versus direct data importing) to
+see how well it matches what you have in front of you. *Note*: it is perfectly
+acceptable to have rows or columns that you don't foresee using. Our view is to
+leave you with too much data that you can opt to select from, as opposed to too
+little data leaving you wishing you had another data point on your cycling ridge
+plots!
+
+``` {r table, echo=TRUE, warning=FALSE, message = FALSE}
+
+tidyfunc %>% 
+  select(date, time, act_type, total_elevation_gain, elapsed_time, distance) %>% 
+  reactable(
+    searchable = TRUE,
+    filterable = TRUE,
+    columns = list(date = colDef(name = "Date"),
+                   time = colDef(name = "Time"),
+                   act_type = colDef(name = "Activity Type"),
+                   total_elevation_gain = colDef(name = "Elevation Gain"),
+                   elapsed_time = colDef(name = "Duration"),
+                   distance = colDef(name = "Distance"))
+  )
+
+
+```
+
+Hopefully what you noticed in the code above is that I purposefully selected 6 columns for demonstration purposes. This was 6 of 49 columns, and it's really not up to us what will be useful to you! Some columns may be really useful for you for the types of activities that you do (e.g., you'll really want to know distance for running and cycling; you might care less about distance for strength workouts). Also, the `reactable()` function is a really nice way to quickly and efficiently build a clean, searcheable table. Buyer beware - once you go `reactable()` you might never go back to `kable()`!
