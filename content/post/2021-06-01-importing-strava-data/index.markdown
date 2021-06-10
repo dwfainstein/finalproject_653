@@ -29,7 +29,7 @@ This post will cover two distinct two ways to download your data.
 
 First, visit <https://www.strava.com/settings/api>.
 
-If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.
+If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application. 
 
 <center>
 
