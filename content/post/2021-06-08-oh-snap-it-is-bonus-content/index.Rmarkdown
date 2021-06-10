@@ -12,7 +12,7 @@ tags:
   - fire emoji here
 ---
 
-```{r we might need extra credit, echo=TRUE}
+```{r we might need extra credit, echo=FALSE, include=TRUE, message=FALSE}
 library(ggplot2)
 library(dplyr)
 all_states <- map_data("state")  

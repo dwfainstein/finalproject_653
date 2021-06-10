@@ -12,23 +12,5 @@ tags:
   - fire emoji here
 ---
 
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
 <img src="{{< blogdown/postref >}}index_files/figure-html/we might need extra credit-1.png" width="672" />
 
