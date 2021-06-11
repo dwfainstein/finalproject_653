@@ -40,7 +40,10 @@ oneplot <- tidy_data %>%
            subtitle = "Data displays trends found within the week",
            x = "",
            y = "Number of Hikes")
+oneplot
 ```
+
+<img src="{{< blogdown/postref >}}index_files/figure-html/one plot-1.png" width="672" />
 
 Now we will create a parallel iteration of the data by grouping by activity and nesting. This will create a data frame with individual frames nested within it categorized by activity. By doing this, we are able to produce separate plots displaying weekly data for each activity type.
 
@@ -54,7 +57,7 @@ final_plots <-
   nest() %>% 
   mutate(plots = map2(data, act_type, ~{
     ggplot(.x, aes(weekday)) +
-      geom_histogram(stat = "count") +
+      geom_bar(stat = "count") +
       labs(title = glue("Amount of {.y} activity over the week"),
            subtitle = "Data displays trends found within the week",
           x = "",
@@ -66,6 +69,12 @@ weeklydata$plots[[2]]
 ```
 
 <img src="{{< blogdown/postref >}}index_files/figure-html/multiple plots-1.png" width="672" />
+
+```r
+weeklydata$plots[[4]]
+```
+
+<img src="{{< blogdown/postref >}}index_files/figure-html/multiple plots-2.png" width="672" />
 
 The final step is to save all of the plots. We will do this in three steps:
 1. create a directory within your machine's files

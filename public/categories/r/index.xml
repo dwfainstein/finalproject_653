@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>R on A Hugo website</title>
-    <link>/categories/r/</link>
+    <link>https://trusting-payne-5ce5b1.netlify.app/categories/r/</link>
     <description>Recent content in R on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language>
+    <lastBuildDate>Tue, 08 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://trusting-payne-5ce5b1.netlify.app/categories/r/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>connecting_strava</title>
-      <link>/1/01/01/functional-programming-with-strava-data/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>OH SNAP IT IS BONUS CONTENT</title>
+      <link>https://trusting-payne-5ce5b1.netlify.app/2021/06/08/oh-snap-it-is-bonus-content/</link>
+      <pubDate>Tue, 08 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>/1/01/01/functional-programming-with-strava-data/</guid>
-      <description>Let’s bring in your Strava data! This blog post will guide you the somewhat complicated process of bringing in your own personal Strava data for use within the RStudio environment. To begin, you will need to have two things: an active Strava account and an RStudio .Rmd ready to use.
-First, visit https://www.strava.com/settings/api. If you are not logged in, it will prompt you to enter your login credentials. Once you are logged in, you will be taken to the Strava page to create an API Application.</description>
+      <guid>https://trusting-payne-5ce5b1.netlify.app/2021/06/08/oh-snap-it-is-bonus-content/</guid>
+      <description></description>
     </item>
     
   </channel>
