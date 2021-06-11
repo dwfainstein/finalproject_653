@@ -2,8 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
-
+.DS_Store
+Thumbs.db
 .httr-oauth
+/public/
+/resources/
 
 content/post/.DS_Store
 

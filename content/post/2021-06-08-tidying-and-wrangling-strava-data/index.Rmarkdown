@@ -35,7 +35,7 @@ is how to effectively take control of their own data to make novel and
 interesting visualizations or depictions of one's hard work. In some senses,
 Strava makes this easy by packing your data for you with options on how you wish
 to view your achievements. For the DIY'er, the story is a little more
-complicated. As we've outlined above with the reading in of your personal Strava
+complicated. As we've outlined [previously](/2021/06/01/importing-strava-data/) with the reading in of your personal Strava
 data, there is a consistent theme of following key steps to have our data ready
 for your most creative projects.
 
@@ -45,12 +45,20 @@ yards as the unit of measurement. This is in contrast to the remainder of
 activities, which seem to default to either the metric or imperial units defined
 when you start your account. In recognizing that other activities (e.g.,
 sprinting) may be recorded in inappropriate units (e.g., miles for sprinting,
-when feet is preferable), the following function is flexible to incorporate
+when feet or meters is preferable), the following function is flexible to incorporate
 other conversions that you deem appropriate:
 ```{r conversion_function, echo=TRUE}
 yardstometers <- function(yards, swimming) {
   ifelse(swimming, yards * 1.09361, yards)
 }
+
+convert_to <- function(distance, 
+                       to_convert, 
+                       conversion = function(x) x * 1.09361) {
+  ifelse(to_convert, conversion(distance), distance)
+}
+convert_to(c(100, 30, 20), c(TRUE, FALSE, TRUE))
+convert_to(c(100, 30, 20), c(TRUE, FALSE, TRUE), function(x) x*100)
 ```
 
 
@@ -74,7 +82,7 @@ proportions_activity <- function(activities, threshold = 0.02) {
 ```
 
 The following code chunk takes data from the prior API calls and tidy's a
-dataframe for us using the two abovementioned functions. The custom functions
+dataframe for us using the two above mentioned functions. The custom functions
 are combined with pre-existing functions from the Tidyverse to whittle down the
 incoming data to it's most essential features and also excludes activities that
 you don't do very often (e.g., that one time you went stand up paddle boarding
@@ -132,4 +140,4 @@ tidyfunc %>%
 
 ```
 
-Hopefully what you noticed in the code above is that I purposefully selected 6 columns for demonstration purposes. This was 6 of 49 columns, and it's really not up to us what will be useful to you! Some columns may be really useful for you for the types of activities that you do (e.g., you'll really want to know distance for running and cycling; you might care less about distance for strength workouts). Also, the `reactable()` function is a really nice way to quickly and efficiently build a clean, searcheable table. Buyer beware - once you go `reactable()` you might never go back to `kable()`!
+Hopefully what you noticed in the code above is that I purposefully selected 6 columns for demonstration purposes. This was 6 of 49 columns, and it's really not up to us what will be useful to you! Some columns may be really useful for you for the types of activities that you do (e.g., you'll really want to know distance for running and cycling; you might care less about distance for strength workouts). Also, the `reactable()` function is a really nice way to quickly and efficiently build a clean, search-able table. Buyer beware - once you go `reactable()` you might never go back to `kable()`!
